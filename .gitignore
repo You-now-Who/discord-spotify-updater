@@ -1,0 +1,4 @@
+.env
+access_token.txt
+venv
+__pycache__

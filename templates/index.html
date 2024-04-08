@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Updater</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a202c;
+            color: #a0aec0;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-800 text-white">
+    <div class="container mx-auto px-4 w-[60vw] shadom-md rounded-lg p-[1.5rem] py-[2rem] flex flex-col items-center justify-center">
+        <h1 class="text-4xl mb-4">Status Updater</h1>
+        <button id="start-stop" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Start</button>
+        <div class="mt-4"></div>
+            <label for="time" class="block text-lg">Time to make the request (in seconds):</label>
+            <input type="number" id="time" name="time" class="mt-2 px-4 py-2 rounded w-1/4 text-black">
+            <p id="countdown" class="mt-5 text-lg"> </p>
+            {% if song.current_song is not none %}
+                <p id="player" class="mt-5 text-lg">Currently playing {{song.item.name}} by {{song.item.artists[0].name}} on Spotify</p>
+            {% else %}
+            <p id="player" class="mt-5 text-lg">Not playing anything right now!</p>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        var intervalId;
+        var countdownId;
+        var isRunning = false;
+        $('#start-stop').click(function() {
+            if(isRunning) {
+                clearInterval(intervalId);
+                clearInterval(countdownId);
+                $('#countdown').text('');
+                $('#start-stop').text('Start');
+                isRunning = false;
+                } else {
+                    var time = $('#time').val();
+                    if(time && time > 0) {
+                        intervalId = setInterval(function() {
+                            // make API call to /set_status
+                            $.ajax({
+                                url: '/set_status',
+                                type: 'POST',
+                                success: function(response) {
+                                    console.log('Status updated successfully');
+                                    console.log(response)
+                                    document.getElementById("player").textContent = "Currently playing " + response.item.name + " by " + response.item.artists[0].name + " on Spotify"
+                                    // clear the previous countdown interval
+                                    clearInterval(countdownId);
+                                    // reset the countdown after each request
+                                    var countdown = time;
+                                    $('#countdown').text('Time to next request: ' + countdown + ' seconds');
+                                    countdownId = setInterval(function() {
+                                        countdown--;
+                                        if(countdown >= 0) {
+                                            $('#countdown').text('Time to next request: ' + countdown + ' seconds');
+                                        } else {
+                                            clearInterval(countdownId);
+                                        }
+                                    }, 1000);
+                                },
+                                error: function(error) {
+                                    document.getElementById("player").textContent = "Not playing anything right now!"
+                                    console.log('Error updating status: ', error);
+                                }
+                            });
+                            console.log('Updating status...');
+                        }, time * 1000);
+
+                        $('#start-stop').text('Stop');
+                        isRunning = true;
+                    } else {
+                        alert('Please enter a valid time');
+                    }
+                }
+                });
+    </script>
+</body>
+</html>
