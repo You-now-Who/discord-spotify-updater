@@ -65,7 +65,7 @@ def set_status_route():
         song = get_currently_playing()
         if song is None:
             return {"current_song": None, "error": "An error occurred"}
-        # set_status(song)
+        set_status(song)
         return song
     except:
         return {"error": "An error occurred"}
