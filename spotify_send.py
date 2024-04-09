@@ -43,7 +43,7 @@ def callback():
     # Save the access token to a file
     with open("access_token.txt", "w") as f:
         f.write(access_token)
-    return "Access token saved!"
+    return redirect("/user_interface")
 
 @app.route('/get_currently_playing')
 def get_currently_playing():
