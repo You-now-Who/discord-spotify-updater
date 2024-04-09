@@ -45,5 +45,5 @@ def set_status(song):
     print(response)
     print('for I: ', i)
     logging.info(f'Response Code: {response.status_code}')
-    logging.info(f'Status set to: {i}')
+
     return response
