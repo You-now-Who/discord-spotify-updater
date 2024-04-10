@@ -10,7 +10,12 @@ function makeRequestAndStartTimer(time) {
         url: '/set_status',
         success: function(response) {
             console.log(response)
-            document.getElementById("player").textContent = "Currently playing " + response.item.name + " by " + response.item.artists[0].name + " on Spotify"
+            if (response.item != null){
+                document.getElementById("player").textContent = "Currently playing " + response.item.name + " by " + response.item.artists[0].name + " on Spotify"
+            }
+            else{
+                document.getElementById("player").textContent = "No song is being played on Spotify!"
+            }
             // clear the previous countdown interval
             clearInterval(countdownId);
             // reset the countdown after each request
@@ -50,6 +55,6 @@ $('#start-stop').click(function() {
     } else {
         isRunning = false;
         $('#start-stop').text('Start');
-        clearInterval(countdownId);
+        clearTimeout(countdownId);
     }
 });

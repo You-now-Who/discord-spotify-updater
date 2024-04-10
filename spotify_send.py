@@ -59,18 +59,25 @@ def get_currently_playing():
         song_is_playing = response.json()
         return response.json()
     except:
-        return None
+        return {"current_song": None, "item": None}
     
 @app.route('/set_status', methods=["GET"])
 def set_status_route():
     global last_song
     try:
         song = get_currently_playing()
-        if song is None:
+        # print(song)
+        if song['item'] is None:
+            if last_song != "":
+                set_status({"item": {"name": "🎵 Not listening to anything right now!"}})
+            else:
+                print("No new song detected, no request made")
             last_song = ""
             return {"current_song": None, "error": "An error occurred"}
 
-        if song['item']['name'] != last_song:
+
+        if song['item']['name'] != last_song and song['item']['name'] is not None:
+            print("New song detected, sending request")
             set_status(song)
         else:
             print("Same song, no request made")
@@ -78,15 +85,22 @@ def set_status_route():
 
         last_song = song['item']['name']
         return song
-    except:
-        return {"error": "An error occurred"}
+    # except KeyError:
+    #     print("KeyError occurred, reauthorizing...")
+    #     # Reauthorize here
+    #     return redirect("/")
+    except Exception as e:
+        print("An error occurred", e)
+        return {"error": "An error occurred", "error_code": str(e)}
 
 @app.route('/user_interface')
 def user_interface():
     global song_is_playing
-    song_is_playing=get_currently_playing()
-    if song_is_playing is None:
+    try:
+        song_is_playing=get_currently_playing()
+    except:
         song_is_playing = {"current_song": None}
+    
     return render_template("index.html", song=song_is_playing)
 
 if __name__ == "__main__":

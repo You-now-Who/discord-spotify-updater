@@ -23,10 +23,10 @@
             <label for="time" class="block text-lg">Time to make the request (in seconds):</label>
             <input type="number" id="time" name="time" class="mt-2 px-4 py-2 rounded w-1/4 text-black">
             <p id="countdown" class="mt-5 text-lg"> Timer is stopped. </p>
-            {% if song.current_song is not none %}
+            {% if song.current_song != none %}
                 <p id="player" class="mt-5 text-lg">Currently playing {{song.item.name}} by {{song.item.artists[0].name}} on Spotify</p>
             {% else %}
-            <p id="player" class="mt-5 text-lg">Not playing anything right now!</p>
+                <p id="player" class="mt-5 text-lg">No song is being played on Spotify!</p>
             {% endif %}
         </div>
     </div>
