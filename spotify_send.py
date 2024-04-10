@@ -4,6 +4,7 @@ import dotenv
 from flask import Flask, request, redirect, render_template
 from urllib.parse import urlencode
 from status_discord import set_status
+import sys
 
 global song_is_playing
 
@@ -13,6 +14,7 @@ dotenv.load_dotenv()
 spotify_client_id = os.getenv("SPOTIFY_CLIENT_ID")
 spotify_client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
 redirect_uri = os.getenv("REDIRECT_URI")
+last_song = ""
 
 app = Flask(__name__)
 
@@ -59,13 +61,22 @@ def get_currently_playing():
     except:
         return None
     
-@app.route('/set_status', methods=["POST"])
+@app.route('/set_status', methods=["GET"])
 def set_status_route():
+    global last_song
     try:
         song = get_currently_playing()
         if song is None:
+            last_song = ""
             return {"current_song": None, "error": "An error occurred"}
-        set_status(song)
+
+        if song['item']['name'] != last_song:
+            set_status(song)
+        else:
+            print("Same song, no request made")
+            print("Current song is", song['item']['name'])
+
+        last_song = song['item']['name']
         return song
     except:
         return {"error": "An error occurred"}
