@@ -63,9 +63,10 @@
         <div class="mt-4 flex flex-col items-center justify-center">
             <label for="time" class="block text-lg mb-2">Time to make the request (in seconds):</label>
             <div class="flex items-center justify-center">
-                <input type="number" id="time" name="time" class="px-4 py-2 mx-2 rounded text-black">
+                <input type="number" id="time" name="time" class="px-4 py-2 mx-2 rounded text-black" value="10" placeholder="Enter time in seconds"/>
                 <button id="start-stop" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Start</button>
             </div>
+            <img id="song-img" src="" alt="Album cover" class="hidden h-48 w-48 object-cover mt-3 rounded-full shadow-lg">
             <p id="player" class="mt-5 text-lg">No song is being played on Spotify!</p>
             <div class="my-5">
                 <div id="embed-iframe" class="">
@@ -74,7 +75,7 @@
         </div>
     </div>
     <!-- No need for a separate script tag if the timer.js file is included in your static assets -->
-    <script>
+    <!-- <script>
         window.onSpotifyIframeApiReady = (IFrameAPI) => {
             const element = document.getElementById('embed-iframe');
             const options = {
@@ -85,7 +86,7 @@
             IFrameAPI.createController(element, options, callback);
         };
         
-        </script>
+        </script> -->
         <script src="{{url_for('static', filename='/scripts/timer.js')}}"></script>
 </body>
 </html>

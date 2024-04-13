@@ -2,7 +2,6 @@ import requests
 from dotenv import load_dotenv
 import json
 import os
-
 import time  # Import the time module
 import logging  # Import the logging module
 
@@ -15,9 +14,10 @@ headers = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36',
     'accept': '*/*',
 }
+PORT=os.environ.get('PORT')
 
 def get_current_song():
-    response = requests.get('http://localhost:5000/get_currently_playing')
+    response = requests.get('http://localhost:'+str(PORT)+'/get_currently_playing')
     if response.status_code != 200:
         return None
     return response.json()

@@ -1,5 +1,3 @@
-<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
-
 var countdownId;
 var isRunning = false;
 
@@ -7,17 +5,23 @@ function makeRequestAndStartTimer(time) {
     if (!isRunning) {
         return;
     }
-   
 
     $.ajax({
         url: '/set_status',
         success: function(response) {
             console.log(response)
             if (response.item != null){
-                document.getElementById("player").textContent = "Currently playing " + response.item.name + " by " + response.item.artists[0].name + " on Spotify"
+                document.getElementById("player").innerHTML = "Currently playing <b>" + response.item.name + "</b> by <b>" + response.item.artists[0].name + "</b> on Spotify"
+                if (response.item.album.images.length > 0) {
+                    document.getElementById("song-img").src = response.item.album.images[0].url;
+                    document.getElementById("song-img").style.display = "block";
+                } else {
+                    document.getElementById("song-img").style.display = "none";
+                }
             }
             else{
                 document.getElementById("player").textContent = "No song is being played on Spotify!"
+                document.getElementById("song-img").style.display = "none";
             }
             // clear the previous countdown interval
             clearInterval(countdownId);

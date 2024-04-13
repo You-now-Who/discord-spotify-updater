@@ -10,12 +10,12 @@ import requests
 
 global song_is_playing
 
-
 dotenv.load_dotenv()
 
 spotify_client_id = os.getenv("SPOTIFY_CLIENT_ID")
+port=os.environ.get('PORT')
 spotify_client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
-redirect_uri = os.getenv("REDIRECT_URI")
+redirect_uri = "http://localhost:" + str(port) + "/callback"
 last_song = ""
 
 app = Flask(__name__)
@@ -95,7 +95,11 @@ def set_status_route():
     except Exception as e:
         try:
             # Try to make a request to refresh the token and try again
-            return redirect("/")
+            # return redirect("/")
+            pass
+        
+            print("Refreshing token failed", e)
+            return {"error": "An error occurred", "error_code": str(e)}
         except Exception as e:    
             print("Refreshing token failed", e)
             return {"error": "An error occurred", "error_code": str(e)}
@@ -111,4 +115,4 @@ def user_interface():
     return render_template("index.html", song=song_is_playing)
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(port=int(port), debug=True)
