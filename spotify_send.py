@@ -5,6 +5,8 @@ from flask import Flask, request, redirect, render_template
 from urllib.parse import urlencode
 from status_discord import set_status
 import sys
+from flask_cors import CORS
+import requests
 
 global song_is_playing
 
@@ -17,6 +19,7 @@ redirect_uri = os.getenv("REDIRECT_URI")
 last_song = ""
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/')
 def index():
@@ -90,8 +93,12 @@ def set_status_route():
     #     # Reauthorize here
     #     return redirect("/")
     except Exception as e:
-        print("An error occurred", e)
-        return {"error": "An error occurred", "error_code": str(e)}
+        try:
+            # Try to make a request to refresh the token and try again
+            return redirect("/")
+        except Exception as e:    
+            print("Refreshing token failed", e)
+            return {"error": "An error occurred", "error_code": str(e)}
 
 @app.route('/user_interface')
 def user_interface():

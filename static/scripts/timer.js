@@ -1,3 +1,5 @@
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+
 var countdownId;
 var isRunning = false;
 
@@ -5,6 +7,7 @@ function makeRequestAndStartTimer(time) {
     if (!isRunning) {
         return;
     }
+   
 
     $.ajax({
         url: '/set_status',
