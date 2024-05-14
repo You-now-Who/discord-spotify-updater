@@ -2,5 +2,6 @@
 access_token.txt
 venv
 __pycache__
-env
+.env
 .pythonversion
+tokens.json

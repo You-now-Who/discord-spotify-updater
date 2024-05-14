@@ -4,19 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Status Updater</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
     <style>
+
+        @keyframes pulse {
+            0% {
+                background-color: #121212;
+            }
+            50% {
+                background-color: #1f442c;
+            }
+            100% {
+                background-color: #121212;
+            }
+        }
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #333;
-            color: #f4f4f4;
+            font-family: 'Circular Std', sans-serif;
+            background-color: #121212;
+            color: #FFFFFF;
         }
         #start-stop {
             transition: background-color 0.3s ease;
-            background-color: #4CAF50;
+            background-color: #1DB954;
             border: none;
             color: white;
             padding: 13px 32px;
@@ -24,28 +36,28 @@
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
-            margin: 12px 2px 4px 2px; /* Adjusted margin */
+            margin: 12px 2px 4px 2px;
             cursor: pointer;
         }
         #start-stop:hover {
-            background-color: #45a049;
+            background-color: #1ed760;
         }
         #time {
-            border: 1px solid #ccc;
+            border: 1px solid #282828;
             border-radius: 5px;
             padding: 10px;
             width: 100%;
             box-sizing: border-box;
             margin-top: 10px;
-            background-color: #555;
-            color: #f4f4f4;
+            background-color: #282828;
+            color: #FFFFFF;
         }
         #countdown {
             font-size: 20px;
-            color: #4CAF50;
+            color: #1DB954;
             margin-top: 20px;
             padding: 10px;
-            border: 2px solid #4CAF50;
+            border: 2px solid #1DB954;
             border-radius: 5px;
             width: fit-content;
         }
@@ -56,37 +68,29 @@
         }
     </style>
 </head>
-<body class="flex items-center justify-center h-screen bg-gray-800 text-gray-200">
-    <div class="container mx-auto px-4 w-3/5 rounded-lg p-6 flex flex-col items-center justify-center">
-        <h1 class="text-4xl mb-8">Status Updater</h1>
-        <p id="countdown" class="mt-5 text-lg"> Timer is stopped. </p>
+<body class="flex items-center justify-center h-screen text-white">
+    <div class="container mx-auto px-4 w-3/5 rounded-lg p-6 flex flex-col items-center justify-center rounded-lg">
+        <h1 class="text-4xl mb-8 font-bold">Status Updater</h1>
+        <p id="countdown" class="mt-5 text-lg text-white py-2 px-4 rounded-lg"> Timer is stopped. </p>
         <div class="mt-4 flex flex-col items-center justify-center">
             <label for="time" class="block text-lg mb-2">Time to make the request (in seconds):</label>
             <div class="flex items-center justify-center">
-                <input type="number" id="time" name="time" class="px-4 py-2 mx-2 rounded text-black" value="10" placeholder="Enter time in seconds"/>
-                <button id="start-stop" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Start</button>
+                <input type="number" id="time" name="time" class="px-4 py-2 mx-2 rounded text-white bg-gray-800" value="10" placeholder="Enter time in seconds"/>
+                <button id="start-stop" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Start</button>
             </div>
-            <img id="song-img" src="" alt="Album cover" class="hidden h-48 w-48 object-cover mt-3 rounded-full shadow-lg">
-            <p id="player" class="mt-5 text-lg">No song is being played on Spotify!</p>
+            {% if song.current_song != none %}
+                <img id="song-img" src={{song.item.album.images[0].url}} alt="Album cover" class="h-48 w-48 object-cover mt-4 rounded-xl shadow-lg">
+                <p id="player" class="mt-5 text-lg">Currently playing <b>{{song.item.name}}</b> by <b>{{song.item.artists[0].name}}</b> on Spotify</p>
+            {% else %}
+                <img id="song-img" src="" alt="Album cover" class="hidden h-48 w-48 object-cover mt-4 rounded-xl shadow-lg">
+                <p id="player" class="mt-5 text-lg">No song is being played on Spotify!</p>
+            {% endif %}
             <div class="my-5">
                 <div id="embed-iframe" class="">
                 </div>
             </div>
         </div>
     </div>
-    <!-- No need for a separate script tag if the timer.js file is included in your static assets -->
-    <!-- <script>
-        window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            const element = document.getElementById('embed-iframe');
-            const options = {
-                height: '160',
-                uri: "spotify:album:3HqvNhgiCC6f3owJjR1PQV"
-            };
-            const callback = (EmbedController) => {};
-            IFrameAPI.createController(element, options, callback);
-        };
-        
-        </script> -->
-        <script src="{{url_for('static', filename='/scripts/timer.js')}}"></script>
+    <script src="{{url_for('static', filename='/scripts/timer.js')}}"></script>
 </body>
 </html>
