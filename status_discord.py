@@ -7,6 +7,9 @@ import logging  # Import the logging module
 
 load_dotenv()  # Load environment variables from .env file
 
+global prev_song_is_none
+prev_song_is_none = False
+
 url = 'https://discord.com/api/v9/users/@me/settings'
 headers = {
     'authorization': os.getenv('DISCORD_TOKEN'),
@@ -27,15 +30,24 @@ def get_current_song():
 logging.basicConfig(filename='/Users\yashy\.custom-discord-status/discord_status.log', level=logging.INFO, format='%(asctime)s %(message)s')
 
 def set_status(song):
+    global prev_song_is_none
     res = get_current_song()
-    if res is None:
-        i = '🎵 Not listening to anything'
+    if song is None:
+        if prev_song_is_none:
+            return
+        i = '🎧 Not listening to anything'
+        prev_song_is_none = True
+    elif res is None:
+        i = '🎧 Not listening to anything'
+        prev_song_is_none = True
     elif 'item' in res:
         song = res['item']['name']
         artist = res['item']['artists'][0]['name']
-        i = f'Currently listening 🎵 {song} - {artist}'
+        i = f'Currently listening 🎧 {song} - {artist}'
+        prev_song_is_none = False
     else:
-        i = '🎵 Not listening to anything'
+        i = '🎧 Not listening to anything'
+        prev_song_is_none = True
     data = json.dumps({
         "custom_status": {
             "text": i

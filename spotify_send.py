@@ -114,7 +114,7 @@ def set_status_method():
     # print(song)
     if song['item'] is None:
         if last_song != "":
-            set_status({"item": {"name": "🎵 Not listening to anything right now!"}})
+            set_status(None)
         else:
             print("No new song detected, no request made")
         last_song = ""
