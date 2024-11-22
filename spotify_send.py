@@ -39,7 +39,8 @@ def get_token_values():
         return data
     except:
         access_token = None
-        refresh_token = None
+        if (refresh_token == None):
+            refresh_token = ""
         return data
 
 def write_token_values(data):
@@ -55,6 +56,8 @@ app = Flask(__name__)
 
 # A replacement function to the get_new_token function
 def get_refresh_token(refresh_token):
+    print("refresh token is ")
+    print(refresh_token)
 
     auth_value = base64.b64encode(f'{spotify_client_id}:{spotify_client_secret}'.encode('utf-8')).decode('utf-8')
 
@@ -192,7 +195,8 @@ def set_status_route():
             return song
             
         except Exception as e:    
-            print("Refreshing token failed", e)
+            print("Refreshing token failed")
+            print(e)
             return {"error": "An error occurred", "error_code": str(e)}
 
 @app.route('/user_interface')
