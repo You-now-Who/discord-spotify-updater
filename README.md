@@ -1,4 +1,4 @@
-
+![image](https://github.com/user-attachments/assets/5b56c350-10c0-4379-9a2c-9697edf5e9e4)
 # Spotify Discord Status Updater
 
 This is a flask server, that fetches the current song played on your Spotify account and updates your Discord status to reflect the same
@@ -32,5 +32,5 @@ Visit `http://localhost:5000/` and authenticate the application to access user's
 Thats it!
 ## Demo
 
-![status updater](https://i.imgur.com/lAfzQcO.png)
-![discord profile](https://i.imgur.com/zjzjt3h.png)
+![status updater](https://i.imgur.com/WVQ6hGh.png)
+![discord profile](https://i.imgur.com/sL5A0ZD.png)
